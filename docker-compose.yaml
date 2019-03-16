@@ -1,0 +1,32 @@
+version: '3'
+services:
+  db:
+    build:
+      context: ./docker/db
+    volumes:
+      - dbvol:/data/db
+    environment:
+      - MYSQL_DATABASE=test
+      - MYSQL_ROOT_PASSWORD=pass
+    ports:
+      - "3306:3306"
+  app:
+    build: 
+      context: ./docker/app
+    volumes:
+      - ./:/var/app
+    depends_on:
+      - db
+  server:
+    build: 
+      context: ./docker/server
+    volumes:
+      - ./docker/server/conf.d:/etc/nginx/conf.d
+      - ./:/var/app
+    depends_on:
+      - app
+    ports:
+      - "8080:80"
+
+volumes:
+  dbvol:
