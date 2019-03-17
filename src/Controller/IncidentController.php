@@ -15,7 +15,7 @@ class IncidentController extends BaseController {
      * @Route("/incidents", name="incidents", methods={"GET"})
      */
     public function listAction() {
-
+        
         $repo = $this->getRepository(Incident::class);
 
         $data = $repo->findAll();
@@ -103,16 +103,29 @@ class IncidentController extends BaseController {
 
     public function save(?Incident $incident, string $title, string $description, string $criticitySlug, string $typeSlug, string $statusSlug = Status::OPEN_SLUG) {
 
+        $errors = [];
+
         $incidentRepo = $this->getRepository(Incident::class);
         $statusRepo = $this->getRepository(Status::class);
         $criticityRepo = $this->getRepository(Criticity::class);
         $typeRepo = $this->getRepository(Type::class);
 
-        $criticity = $criticityRepo->findOneBy(["slug" => $criticitySlug]);
-        $type = $typeRepo->findOneBy(["slug" => $typeSlug]);
-        $status = $statusRepo->findOneBy(["slug" => $statusSlug]);
-
         if ($incident == null) $incident = new Incident();
+
+        $criticity = $criticityRepo->findOneBy(["slug" => $criticitySlug]);
+        if ($criticity == null && !empty($criticitySlug)) {
+            $errors[] = $this->newConstraintViolationMessage($incident, "criticity", "Invalid value.");
+        }
+        
+        $type = $typeRepo->findOneBy(["slug" => $typeSlug]);
+        if ($type == null) {
+            $errors[] = $this->newConstraintViolationMessage($incident, "type", "Invalid value.");
+        }
+        
+        $status = $statusRepo->findOneBy(["slug" => $statusSlug]);
+        if ($status == null) {
+            $errors[] = $this->newConstraintViolationMessage($incident, "status", "Invalid value.");
+        }
 
         $incident->setTitle($title);
         $incident->setDescription($description);
@@ -120,7 +133,7 @@ class IncidentController extends BaseController {
         $incident->setCriticity($criticity);
         $incident->setType($type);
 
-        $errors = $this->validate($incident);
+        $errors = array_merge($errors, $this->validate($incident));
         if (count($errors) > 0) {
             return $errors;
         }

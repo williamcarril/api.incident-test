@@ -5,6 +5,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Symfony\Component\Validator\ConstraintViolation;
 
 
 abstract class BaseController extends AbstractController {
@@ -25,6 +26,11 @@ abstract class BaseController extends AbstractController {
         }
 
         return $messages;
+    }
+
+    protected function newConstraintViolationMessage($object, string $field, string $message): string {
+
+        return sprintf("Object(%s).%s:\n    %s", get_class($object), $field, $message);
     }
 
     protected function getRepository($class): ServiceEntityRepository {

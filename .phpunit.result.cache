@@ -1,1 +1,0 @@
-C:37:"PHPUnit\Runner\DefaultTestResultCache":195:{a:2:{s:7:"defects";a:1:{s:62:"App\Tests\Controller\IncidentControllerTest::testListIncidents";i:4;}s:5:"times";a:1:{s:62:"App\Tests\Controller\IncidentControllerTest::testListIncidents";d:0.05;}}}

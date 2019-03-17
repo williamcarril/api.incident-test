@@ -18,7 +18,7 @@ build:
 #########################
 .PHONY: run
 run:
-	@docker-compose start
+	@docker-compose up
 
 .PHONY: start
 start: install build run

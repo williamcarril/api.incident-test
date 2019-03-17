@@ -33,12 +33,12 @@ class Incident extends BaseEntity {
     private $description;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Criticity")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Criticity", fetch="EAGER")
      */
     private $criticity;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Status")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Status", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      * 
      * @Assert\NotBlank
@@ -46,7 +46,7 @@ class Incident extends BaseEntity {
     private $status;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Type")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Type", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      * 
      * @Assert\NotBlank
