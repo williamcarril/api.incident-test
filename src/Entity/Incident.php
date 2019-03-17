@@ -3,12 +3,13 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\IncidentRepository")
+ * @ORM\Table(name="tb_incident")
  */
-class Incident
-{
+class Incident implements \JsonSerializable {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -18,11 +19,16 @@ class Incident
 
     /**
      * @ORM\Column(type="string", length=50)
+     * 
+     * @Assert\NotBlank
+     * @Assert\Length(min=3)
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * 
+     * @Assert\NotBlank
      */
     private $description;
 
@@ -34,12 +40,16 @@ class Incident
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Status")
      * @ORM\JoinColumn(nullable=false)
+     * 
+     * @Assert\NotBlank
      */
     private $status;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Type")
      * @ORM\JoinColumn(nullable=false)
+     * 
+     * @Assert\NotBlank
      */
     private $type;
 
@@ -95,5 +105,9 @@ class Incident
         $this->type = $type;
 
         return $this;
+    }
+
+    public function jsonSerialize() {
+        return get_object_vars($this);
     }
 }

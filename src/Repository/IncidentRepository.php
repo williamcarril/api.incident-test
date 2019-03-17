@@ -18,4 +18,20 @@ class IncidentRepository extends ServiceEntityRepository {
         parent::__construct($registry, Incident::class);
     }
 
+    public function save(Incident $entity): void {
+        
+        $db = $this->getEntityManager();
+
+        if ($entity->getId() == null) $db->persist($entity);
+        
+        $db->flush();
+    }
+
+    public function delete(Incident $entity): void {
+
+        $db = $this->getEntityManager();
+
+        $db->remove($entity);
+        $db->flush();
+    }
 }

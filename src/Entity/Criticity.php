@@ -8,8 +8,14 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CriticityRepository")
+ * @ORM\Table(name="tb_criticity")
  */
-class Criticity {
+class Criticity implements \JsonSerializable {
+
+    const HIGH_SLUG = "high";
+    const MEDIUM_SLUG = "medium";
+    const LOW_SLUG = "low";
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -56,4 +62,7 @@ class Criticity {
         return $this;
     }
 
+    public function jsonSerialize() {
+        return get_object_vars($this);
+    }
 }

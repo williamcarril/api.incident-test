@@ -4,6 +4,11 @@ namespace App\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+use App\Entity\Incident;
+use App\Entity\Status;
+use App\Entity\Type;
+use App\Entity\Criticity;
+
 class IncidentController extends BaseController {
 
     /**
@@ -11,9 +16,11 @@ class IncidentController extends BaseController {
      */
     public function listAction() {
 
-        $data = [];
+        $repo = $this->getRepository(Incident::class);
 
-        return $this->json($data);
+        $data = $repo->findAll();
+
+        return $this->newResponse($data);
     }
 
     /**
@@ -21,9 +28,22 @@ class IncidentController extends BaseController {
      */
     public function newAction(Request $request) {
 
-        $data = [];
+        $input = $request->request;
 
-        return $this->json($data);
+        $data = $this->save(
+            null,
+            $input->get("title", ""),
+            $input->get("description", ""),
+            $input->get("criticity", ""),
+            $input->get("type", "")
+        );
+
+        $status = 200;
+        if (!($data instanceof Incident)) {
+            $status = 422;
+        }
+
+        return $this->newResponse($data, $status);
     }
 
     /**
@@ -31,20 +51,39 @@ class IncidentController extends BaseController {
      */
     public function getAction(Request $request, $id) {
 
-        $data = [];
+        $repo = $this->getRepository(Incident::class);
 
-        return $this->json($data);
+        $data = $repo->find($id);
+
+        if ($data == null) return $this->newNotFoundResponse();
+
+        return $this->newResponse($data);
     }
 
 
     /**
      * @Route("/incidents/{id}", name="incidents.id.update", methods={"PUT"})
      */
-    public function updateAction(Request $request, $id) {
+    public function updateAction(Request $request, int $id) {
 
-        $data = [];
+        $input = $request->request;
 
-        return $this->json($data);
+        $repo = $this->getRepository(Incident::class);
+
+        $data = $repo->find($id);
+
+        if ($data == null) return $this->newNotFoundResponse();
+
+        $data = $this->save(
+            $data,
+            $input->get("title", ""),
+            $input->get("description", ""),
+            $input->get("criticity", ""),
+            $input->get("type", ""),
+            $input->get("status", "")
+        );
+
+        return $this->newResponse($data);
     }
 
     /**
@@ -52,8 +91,42 @@ class IncidentController extends BaseController {
      */
     public function deleteAction(Request $request, $id) {
 
-        $data = [];
+        $repo = $this->getRepository(Incident::class);
 
-        return $this->json($data);
+        $incident = $repo->find($id);
+        if ($incident == null) return $this->newNotFoundResponse();
+
+        $repo->delete($incident);
+
+        return $this->newResponse();
+    }
+
+    public function save(?Incident $incident, string $title, string $description, string $criticitySlug, string $typeSlug, string $statusSlug = Status::OPEN_SLUG) {
+
+        $incidentRepo = $this->getRepository(Incident::class);
+        $statusRepo = $this->getRepository(Status::class);
+        $criticityRepo = $this->getRepository(Criticity::class);
+        $typeRepo = $this->getRepository(Type::class);
+
+        $criticity = $criticityRepo->findOneBy(["slug" => $criticitySlug]);
+        $type = $typeRepo->findOneBy(["slug" => $typeSlug]);
+        $status = $statusRepo->findOneBy(["slug" => $statusSlug]);
+
+        if ($incident == null) $incident = new Incident();
+
+        $incident->setTitle($title);
+        $incident->setDescription($description);
+        $incident->setStatus($status);
+        $incident->setCriticity($criticity);
+        $incident->setType($type);
+
+        $errors = $this->validate($incident);
+        if (count($errors) > 0) {
+            return $errors;
+        }
+
+        $incidentRepo->save($incident);
+
+        return $incident;
     }
 }

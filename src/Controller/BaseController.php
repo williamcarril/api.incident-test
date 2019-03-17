@@ -3,15 +3,43 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+
 
 abstract class BaseController extends AbstractController {
 
-    protected function json($data, int $status = 200, array $headers = [], array $context = []): JsonResponse {
+    protected $validator;
+
+    public function __construct(ValidatorInterface $validator) {
+        $this->validator = $validator;
+    }
+
+    protected function validate($target): iterable {
+        
+        $messages = [];
+        $errors = $this->validator->validate($target);
+
+        foreach($errors as $error) {
+            $messages[] = $error->__toString();
+        }
+
+        return $messages;
+    }
+
+    protected function getRepository($class): ServiceEntityRepository {
+        return $this->getDoctrine()->getRepository($class);
+    }
+
+    protected function newNotFoundResponse(): JsonResponse {
+        return $this->newResponse(null, 404);
+    }
+
+    protected function newResponse($data = null, int $status = 200, array $headers = [], array $context = []): JsonResponse {
 
         $payload = [
-            "status" => $status,
             "data" => $data,
-            "errors" => []
+            "errors" => null
         ];
 
         if (intval($status / 100) != 2) {
@@ -24,7 +52,9 @@ abstract class BaseController extends AbstractController {
             $payload["errors"] = $errors;
         }
 
-        return parent::json($payload, $status, $headers, $context);
+        if ($status == 404) $payload = null;
+
+        return $this->json($payload, $status, $headers, $context);
     }
 
 }

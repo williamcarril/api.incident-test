@@ -6,8 +6,13 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\StatusRepository")
+ * @ORM\Table(name="tb_status")
  */
-class Status {
+class Status implements \JsonSerializable {
+
+    const OPEN_SLUG = "open";
+    const CLOSED_SLUG = "closed";
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -47,5 +52,9 @@ class Status {
         $this->name = $name;
 
         return $this;
+    }
+
+    public function jsonSerialize() {
+        return get_object_vars($this);
     }
 }
