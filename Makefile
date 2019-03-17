@@ -5,7 +5,6 @@
 .PHONY: install
 install:
 	@composer install
-	@php bin/phpunit
 
 ###########################
 ## Build related targets ##
@@ -19,7 +18,7 @@ build:
 #########################
 .PHONY: run
 run:
-	@docker-compose up
+	@docker-compose start
 
 .PHONY: start
 start: install build run
@@ -27,3 +26,10 @@ start: install build run
 .PHONY: test
 test:
 	php bin/phpunit
+
+###################
+## Other targets ##
+###################
+.PHONY: migrate
+migrate:
+	@php bin/console doctrine:migrations:migrate

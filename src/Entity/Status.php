@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="App\Repository\StatusRepository")
  * @ORM\Table(name="tb_status")
  */
-class Status implements \JsonSerializable {
+class Status extends BaseEntity {
 
     const OPEN_SLUG = "open";
     const CLOSED_SLUG = "closed";
@@ -54,7 +54,4 @@ class Status implements \JsonSerializable {
         return $this;
     }
 
-    public function jsonSerialize() {
-        return get_object_vars($this);
-    }
 }

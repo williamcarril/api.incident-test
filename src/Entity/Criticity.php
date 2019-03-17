@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="App\Repository\CriticityRepository")
  * @ORM\Table(name="tb_criticity")
  */
-class Criticity implements \JsonSerializable {
+class Criticity extends BaseEntity {
 
     const HIGH_SLUG = "high";
     const MEDIUM_SLUG = "medium";
@@ -60,9 +60,5 @@ class Criticity implements \JsonSerializable {
         $this->name = $name;
 
         return $this;
-    }
-
-    public function jsonSerialize() {
-        return get_object_vars($this);
     }
 }

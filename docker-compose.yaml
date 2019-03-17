@@ -15,6 +15,8 @@ services:
       context: ./docker/app
     volumes:
       - ./:/var/app
+    environment:
+      - APP_ENV=localdocker
     depends_on:
       - db
   server:

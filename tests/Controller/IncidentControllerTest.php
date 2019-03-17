@@ -95,18 +95,18 @@ class IncidentControllerTest extends WebTestCase {
         $this->assertTrue(empty($content->errors));
     }
 
-    public function testSuccessfullDeleteIncident() {
+    // public function testSuccessfullDeleteIncident() {
 
-        $client = static::createClient();
+    //     $client = static::createClient();
 
-        $client->xmlHttpRequest("DELETE", "/incidents/1");
+    //     $client->xmlHttpRequest("DELETE", "/incidents/1");
 
-        $response = $client->getResponse();
+    //     $response = $client->getResponse();
 
-        $content = json_decode($response->getContent());
+    //     $content = json_decode($response->getContent());
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertTrue(empty($content->data));
-        $this->assertTrue(empty($content->errors));
-    }
+    //     $this->assertEquals(200, $response->getStatusCode());
+    //     $this->assertTrue(empty($content->data));
+    //     $this->assertTrue(empty($content->errors));
+    // }
 }

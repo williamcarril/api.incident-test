@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\IncidentRepository")
  * @ORM\Table(name="tb_incident")
  */
-class Incident implements \JsonSerializable {
+class Incident extends BaseEntity {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -107,7 +107,4 @@ class Incident implements \JsonSerializable {
         return $this;
     }
 
-    public function jsonSerialize() {
-        return get_object_vars($this);
-    }
 }

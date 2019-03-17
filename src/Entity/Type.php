@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="App\Repository\TypeRepository")
  * @ORM\Table(name="tb_type")
  */
-class Type implements \JsonSerializable {
+class Type extends BaseEntity {
 
     const BRUTE_FORCE_ATTACK_SLUG = "brute-force-attack";
     const LOGIN_DATA_LEAK_SLUG = "login-data-leak";
@@ -56,7 +56,4 @@ class Type implements \JsonSerializable {
         return $this;
     }
 
-    public function jsonSerialize() {
-        return get_object_vars($this);
-    }
 }
