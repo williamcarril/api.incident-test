@@ -85,7 +85,12 @@ class IncidentController extends BaseController {
             $input->get("status", "")
         );
 
-        return $this->newResponse($data);
+        $status = 200;
+        if (!($data instanceof Incident)) {
+            $status = 422;
+        }
+
+        return $this->newResponse($data, $status);
     }
 
     /**
