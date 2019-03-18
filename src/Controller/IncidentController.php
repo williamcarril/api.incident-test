@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Routing\Annotation\Route;
 
 use App\Entity\Incident;
@@ -12,7 +13,7 @@ use App\Entity\Criticity;
 class IncidentController extends BaseController {
 
     /**
-     * @Route("/incidents", name="incidents", methods={"GET"})
+     * @Route("/incidents", name="incidents", methods={"GET", "OPTIONS"})
      */
     public function listAction() {
         
@@ -37,6 +38,7 @@ class IncidentController extends BaseController {
             $input->get("criticity", ""),
             $input->get("type", "")
         );
+
 
         $status = 200;
         if (!($data instanceof Incident)) {
@@ -109,7 +111,6 @@ class IncidentController extends BaseController {
         $statusRepo = $this->getRepository(Status::class);
         $criticityRepo = $this->getRepository(Criticity::class);
         $typeRepo = $this->getRepository(Type::class);
-
         if ($incident == null) $incident = new Incident();
 
         $criticity = $criticityRepo->findOneBy(["slug" => $criticitySlug]);
