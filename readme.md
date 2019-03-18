@@ -14,4 +14,6 @@ Observação: a API precisará utilizar a porta 8080 de sua máquina. Então cer
 Um apelido para execução deste dois comandos pode ser utilizado caso possua o utilitário "make" em seu PATH:
 `make start`
 
-Espere a instalação de dependências e a construção dos conteineres e já é possível acessar a API através do endereço http://127.0.0.1:8080.
+Espere a instalação de dependências e a construção dos conteineres. E então inicialize o banco de dados através do comando: `php bin/console doctrine:migrations:migrate` ou `make migrate`.
+
+Após isso, já é possível acessar a API através do endereço http://127.0.0.1:8080.
